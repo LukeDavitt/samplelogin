@@ -11,7 +11,33 @@ force:!0}),state:"{}"})),r=(n.authResponse||{}).access_token;return e.utils.ifra
 <script>
 hello.on('auth.login', function(auth) {
     console.log(auth.authResponse);
+    var req = {
+      task: 'login',
+      code: '4/CQkLjoEPX8Lj53ip3LvBUKFPCV1J2ju3IJ-VsCfP0iw',
+      clientId: '730221684703-rsvgrrkhnq3v1sbg0engf4od538p5lv4.apps.googleusercontent.com',
+      redirectUri: 'https://localhost:8080',
+      body:{login:true}, 
 
+    };
+    $.ajax({
+        url : "https://localhost:8085/auth/google",
+        type: "POST",
+        data : req,
+        success: function(data, textStatus, jqXHR)
+        {
+          console.log('or here');
+          d =data;
+          t = textStatus;
+          j = jqXHR;
+            //data - response from server
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+          console.log('error');
+          console.log(errorThrown);
+          console.log(textStatus);
+        }
+    });
     // Call user information, for the given network
 });
 </script>
@@ -24,21 +50,22 @@ hello.init({
 </script>
 
 <!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.10.1/bootstrap-social.css">
 <!-- jQuery library -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <!-- Latest compiled JavaScript -->
-<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style>.btn{width:200px;}</style>
 </head>
 <body>
 
 
  <div class="container">
 
-                <button onclick="hello('windows').login()">windows</button>
-                <button onclick="hello('google').login()">google</button>
+                <button onclick="hello('windows').login()" class="btn btn-block btn-social btn-microsoft"><span class="fa fa-windows"></span> Microsoft</button>
+                <button onclick="hello('google').login()" class="btn btn-block btn-social btn-google"><span class="fa fa-google-plus"></span> Google</button>
                 <form name="loginform" onSubmit="return validateForm();" action="main.html" method="post">
                     <label>User name</label>
                     <input type="text" name="usr" placeholder="username"> 
