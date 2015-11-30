@@ -11,8 +11,9 @@
 // about supported directives.
 //
 
-//= require hello.min.js
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
+//= require hello.js
+//= require firebase.js
 //= require_tree .
