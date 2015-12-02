@@ -3,18 +3,25 @@
 <head>
 <%= javascript_include_tag 'application' %>
 <script>
+var firebase_host = "lukedavitt-firebase.firebaseio.com";
+var firebase_url  = "https://" + firebase_host + "/userMeta/-K3yzQ0FKlAonWa8prUz";
+var firebase_secret = "sWlDUM3ZgNPH05EddUHVH1Y4MkcmzHaQB2Ug2d49";
+
 var loginGoogle = function(){
   hello.init({
       google: '350668528555-ctoqagahaa5eohkm30uf6vl5mo52qt0e.apps.googleusercontent.com',
   });
   hello('google').login({response_type:'code', force:true},function(){
     hello('google').api('/me').then(function(r) {
-      console.log('the r is');
-      console.log(r);
-      res = hello('google').getAuthResponse();
-      s = r;
-    });
-    /*$.ajax({
+      var req = {};
+      var auth = hello('google').getAuthResponse();
+      a = auth;
+      me = r;
+      req.task = "login";
+      req.clientId = auth.client_id;
+      req.redirectUri = auth.redirect_uri;
+      req.code = auth.refresh_token;
+      $.ajax({
           url : "https://localhost:8085/auth/google",
           type: "POST",
           dataType:"json",
@@ -34,7 +41,9 @@ var loginGoogle = function(){
             console.log(errorThrown);
             console.log(textStatus);
           }
-      });*/
+      });
+
+    });
   });
 };
 var loginMicrosoft = function(){
@@ -43,50 +52,11 @@ var loginMicrosoft = function(){
   });
   hello('windows').login({response_type:'code', force:true},function(){
     hello('windows').api('/me').then(function(r) {
-      res = hello('google').getAuthResponse();
+      res = hello('windows').getAuthResponse();
       s = r;
     });
   });
 };
-// hello( 'google' ).login( function() {
-//   token = hello( 'google' ).getAuthResponse().access_token;
-//   console.log('called');
-//   thing = hello( 'google' ).getAuthResponse();
-//   code = hello( 'google').getAuthResponse().code;
-// });
-// hello.on('auth.login', function(auth) {
-//     hello( auth.network ).api( '/me' ).then( function(p) {
-//       var req = {};
-//       a = auth;
-//       r = auth.authResponse;
-//       me =p;
-//       req.task = "login";
-//       req.code = "4/wf5S4TomVYszTXwiQ3-XzAdEtUsIkEBDQtkMBD1pM5M";
-//       req.clientId = auth.authResponse.client_id;
-//       req.redirectUri = auth.authResponse.redirect_uri;
-//       $.ajax({
-//           url : "https://localhost:8085/auth/google",
-//           type: "POST",
-//           dataType:"json",
-//           data : JSON.stringify(req),
-//           contentType: "application/json",
-//           success: function(data, textStatus, jqXHR)
-//           {
-//             console.log('or here');
-//             d =data;
-//             t = textStatus;
-//             j = jqXHR;
-//               //data - response from server
-//           },
-//           error: function (jqXHR, textStatus, errorThrown)
-//           {
-//             console.log('error');
-//             console.log(errorThrown);
-//             console.log(textStatus);
-//           }
-//       });
-//     });
-//});
 </script>
 
 <!-- Latest compiled and minified CSS -->
