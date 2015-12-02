@@ -1,3 +1,5 @@
+
+
 var acToken = require('../../shared/acToken'),
     acQueries = require('../../shared/acQueries'),
     acMisc = require('../../shared/acMisc'),
@@ -1363,7 +1365,6 @@ AuthHelper.prototype.generateResponseForMarketingSite = function(body,cb){
                 });
             },
             function(context, callback) {
-                console.log("setting Meta right?");
                 userHelper.setGoogleUserMeta(context, function(error, context) {
                     callback(error, context);
                 });

@@ -15,5 +15,3 @@
 //= require jquery_ujs
 //= require turbolinks
 //= require hello.js
-//= require firebase.js
-//= require_tree .
