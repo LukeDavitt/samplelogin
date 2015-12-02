@@ -10,17 +10,17 @@ var firebase_secret = "sWlDUM3ZgNPH05EddUHVH1Y4MkcmzHaQB2Ug2d49";
 var loginGoogle = function(){
   hello.init({
       google: '350668528555-ctoqagahaa5eohkm30uf6vl5mo52qt0e.apps.googleusercontent.com',
+      //google: '730221684703-rsvgrrkhnq3v1sbg0engf4od538p5lv4.apps.googleusercontent.com'
   });
-  hello('google').login({response_type:'code', force:true},function(){
+  hello('google').login({response_type:'code', force:true, scope:"email"},function(){
     hello('google').api('/me').then(function(r) {
       var req = {};
       var auth = hello('google').getAuthResponse();
       a = auth;
       me = r;
+      req = auth;
       req.task = "login";
-      req.clientId = auth.client_id;
-      req.redirectUri = auth.redirect_uri;
-      req.code = auth.refresh_token;
+      req.marketing_site = true;
       $.ajax({
           url : "https://localhost:8085/auth/google",
           type: "POST",
