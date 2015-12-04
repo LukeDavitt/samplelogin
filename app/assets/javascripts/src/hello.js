@@ -1346,13 +1346,8 @@ hello.utils.extend(hello.utils, {
 		var location = window.location;
 		// Is this an auth relay message which needs to call the proxy?
 		p = _this.param(location.search);
-		f = window;
-		y = parent;
-		yowsers += 1;
 		// OAuth2 or OAuth1 server response?
 		if (p && p.state && (p.code || p.oauth_token)) {
-			yowsers = "something else";
-			yowsers = p.code;
 			var state = JSON.parse(p.state);
 
 			// Add this path as the redirect_uri
@@ -1363,7 +1358,7 @@ hello.utils.extend(hello.utils, {
 			yowsers = path;
 			location.assign(path);
 			if(p.code){
-				parent.localStorage.setItem("blah", p.code);
+				parent.localStorage.setItem("auth_code", p.code);
 				closeWindow();
 				return;
 			}
