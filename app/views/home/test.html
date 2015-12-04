@@ -9,30 +9,31 @@ var loginGoogle = function(){
       google: '350668528555-ctoqagahaa5eohkm30uf6vl5mo52qt0e.apps.googleusercontent.com',
       //google: '730221684703-rsvgrrkhnq3v1sbg0engf4od538p5lv4.apps.googleusercontent.com'
   });
-  hello('google').login({response_type:'code', force:true, scope:"email"},function(){
-    var req = {};
-    var auth = hello('google').getAuthResponse();
-    req = auth;
-    req.task = "login";
-    req.marketing_site = true;
-    $.ajax({
-        url : "https://localhost:8085/auth/google",
-        type: "POST",
-        dataType:"json",
-        data : JSON.stringify(req),
-        contentType: "application/json",
-        success: function(data, textStatus, jqXHR)
-        {
-          console.log('the data is', data);
-          console.log('the acRefreshToken is', data.acRefreshToken);  
-        },
-        error: function (jqXHR, textStatus, errorThrown)
-        {
-          console.log('error');
-          console.log(errorThrown);
-          console.log(textStatus);
-        }
-    });
+  hello('google').login({response_type:'code', force:true, scope:"email"},function(blah){
+    //var req = {};
+   //var auth = hello('google').getAuthResponse();
+    //req = auth;
+    //req.task = "login";
+    //req.marketing_site = true;
+    console.log(blah);
+    // $.ajax({
+    //     url : "https://localhost:8085/auth/google",
+    //     type: "POST",
+    //     dataType:"json",
+    //     data : JSON.stringify(req),
+    //     contentType: "application/json",
+    //     success: function(data, textStatus, jqXHR)
+    //     {
+    //       console.log('the data is', data);
+    //       console.log('the acRefreshToken is', data.acRefreshToken);  
+    //     },
+    //     error: function (jqXHR, textStatus, errorThrown)
+    //     {
+    //       console.log('error');
+    //       console.log(errorThrown);
+    //       console.log(textStatus);
+    //     }
+    // });
   });
 };
 var loginMicrosoft = function(){

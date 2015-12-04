@@ -14,4 +14,4 @@
 //= require jquery
 //= require jquery_ujs
 //= require turbolinks
-//= require hello.js
+//= require_tree ./src
