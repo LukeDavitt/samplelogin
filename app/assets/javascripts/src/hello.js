@@ -1351,9 +1351,8 @@ hello.utils.extend(hello.utils, {
 		yowsers += 1;
 		// OAuth2 or OAuth1 server response?
 		if (p && p.state && (p.code || p.oauth_token)) {
-			/*yowsers = "something else";
+			yowsers = "something else";
 			yowsers = p.code;
-
 			var state = JSON.parse(p.state);
 
 			// Add this path as the redirect_uri
@@ -1363,7 +1362,11 @@ hello.utils.extend(hello.utils, {
 			var path = state.oauth_proxy + '?' + _this.param(p);
 			yowsers = path;
 			location.assign(path);
-			return;*/
+			if(p.code){
+				parent.localStorage.setItem("blah", p.code);
+				closeWindow();
+				return;
+			}
 
 		}
 
