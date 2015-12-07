@@ -2,29 +2,78 @@
 <html itemscope itemtype="http://schema.org/Article">
 <head>
   <!-- BEGIN Pre-requisites -->
+  <%= javascript_include_tag 'application' %>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
   </script>
   <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
   </script>
   <script>
-    var loginMicrosoft = function(){
-      var url = 'https://login.live.com/oauth20_authorize.srf?client_id=000000004416F168&redirect_uri=https://local.westlakelab.com:3000/&scope=wl.signin%20wl.basic%20wl.emails&response_type=code';
-
+  var loginGoogle = function(){
+    hello.init({
+        google: '350668528555-ctoqagahaa5eohkm30uf6vl5mo52qt0e.apps.googleusercontent.com',
+        //google: '730221684703-rsvgrrkhnq3v1sbg0engf4od538p5lv4.apps.googleusercontent.com'
+    });
+    hello('google').login({response_type:'code', force:true, scope:"email"},function(blah){
+      var req = {
+        clientId : '350668528555-ctoqagahaa5eohkm30uf6vl5mo52qt0e.apps.googleusercontent.com',
+        code : localStorage.getItem('auth_code'),
+        redirecUri : 'https://localhost:8080',
+        task:'login'
+      };
       $.ajax({
-          url : url,
-          type: "GET",
-          success: function(data, textStatus, jqXHR)
-          {
-            console.log('the data is', data);
-          },
-          error: function (jqXHR, textStatus, errorThrown)
-          {
-            console.log('error');
-            console.log(errorThrown);
-            console.log(textStatus);
-          }
+        url : "https://localhost:8085/auth/google",
+        type: "POST",
+        dataType:"json",
+        data : JSON.stringify(req),
+        contentType: "application/json",
+        processData: false,
+        success: function(data, textStatus, jqXHR)
+        {
+          console.log('the data is', data);
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+          console.log('error');
+          console.log(errorThrown);
+          console.log(textStatus);
+        }
+        
       });
-
+    });
+  };
+  </script>
+  <script>
+    var loginMicrosoft = function(){
+      hello.init({
+          windows:'000000004416F168',
+      });
+      hello('windows').login({response_type:'code', force:true},function(){
+        var req = {
+          clientId:'000000004416F168',
+          task:'login',
+          code:localStorage.getItem("auth_code"),
+          redirectUri:'https://localhost:8080'
+        };
+        $.ajax({
+        url : "https://localhost:8085/auth/live",
+        type: "POST",
+        dataType:"json",
+        data : JSON.stringify(req),
+        contentType: "application/json",
+        processData: false,
+        success: function(data, textStatus, jqXHR)
+        {
+          console.log('the data is', data);
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+          console.log('error');
+          console.log(errorThrown);
+          console.log(textStatus);
+        }
+        
+      });
+      });
     };
   </script>
   <script>
