@@ -7,6 +7,27 @@
   <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
   </script>
   <script>
+    var loginMicrosoft = function(){
+      var url = 'https://login.live.com/oauth20_authorize.srf?client_id=000000004416F168&redirect_uri=https://local.westlakelab.com:3000/&scope=wl.signin%20wl.basic%20wl.emails&response_type=code';
+
+      $.ajax({
+          url : url,
+          type: "GET",
+          success: function(data, textStatus, jqXHR)
+          {
+            console.log('the data is', data);
+          },
+          error: function (jqXHR, textStatus, errorThrown)
+          {
+            console.log('error');
+            console.log(errorThrown);
+            console.log(textStatus);
+          }
+      });
+
+    };
+  </script>
+  <script>
     function start() {
       gapi.load('auth2', function() {
         auth2 = gapi.auth2.init({
@@ -66,10 +87,28 @@ function signInCallback(authResult) {
     //$('#signinButton').attr('style', 'display: none');
 
     // Send the code to the server
-    callAuthServer(req,"auth/google");
-  } else {
-    // There was an error.
+     // Send the code to the server
+    $.ajax({
+      url : "https://localhost:8085/auth/google",
+      type: "POST",
+      dataType:"json",
+      data : JSON.stringify(req),
+      contentType: "application/json",
+      processData: false,
+      success: function(data, textStatus, jqXHR)
+      {
+        console.log('the data is', data);
+      },
+      error: function (jqXHR, textStatus, errorThrown)
+      {
+        console.log('error');
+        console.log(errorThrown);
+        console.log(textStatus);
+      }
+      
+    });
   }
+   
 }
 </script>
 <!-- Latest compiled and minified CSS -->
