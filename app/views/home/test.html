@@ -1,54 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html itemscope itemtype="http://schema.org/Article">
 <head>
-<%= javascript_include_tag 'application' %>
+  <!-- BEGIN Pre-requisites -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+  <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer>
+  </script>
+  <script>
+    function start() {
+      gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+          client_id: '350668528555-ctoqagahaa5eohkm30uf6vl5mo52qt0e.apps.googleusercontent.com',
+          // Scopes to request in addition to 'profile' and 'email'
+          //scope: 'additional_scope'
+        });
+      });
+    }
+  </script>
 <script>
 
-var loginGoogle = function(){
-  hello.init({
-      google: '350668528555-ctoqagahaa5eohkm30uf6vl5mo52qt0e.apps.googleusercontent.com',
-      //google: '730221684703-rsvgrrkhnq3v1sbg0engf4od538p5lv4.apps.googleusercontent.com'
-  });
-  hello('google').login({response_type:'code', force:true, scope:"email"},function(blah){
-    //var req = {};
-   //var auth = hello('google').getAuthResponse();
-    //req = auth;
-    //req.task = "login";
-    //req.marketing_site = true;
-    console.log(blah);
-    // $.ajax({
-    //     url : "https://localhost:8085/auth/google",
-    //     type: "POST",
-    //     dataType:"json",
-    //     data : JSON.stringify(req),
-    //     contentType: "application/json",
-    //     success: function(data, textStatus, jqXHR)
-    //     {
-    //       console.log('the data is', data);
-    //       console.log('the acRefreshToken is', data.acRefreshToken);  
-    //     },
-    //     error: function (jqXHR, textStatus, errorThrown)
-    //     {
-    //       console.log('error');
-    //       console.log(errorThrown);
-    //       console.log(textStatus);
-    //     }
-    // });
-  });
-};
-var loginMicrosoft = function(){
-  hello.init({
-      windows:'000000004416F168',
-  });
-  hello('windows').login({response_type:'code', force:true},function(){
-    hello('windows').api('/me').then(function(r) {
-      res = hello('windows').getAuthResponse();
-      s = r;
-    });
-  });
-};
-</script>
+  var loginBasic = function(){
+    var user = document.getElementById('username').value;
+    var password = document.getElementById('password').value;
+    var req = {};
+    req.email = user;
+    req.password = password;
+    req.task = "login";
+    callAuthServer(req, "auth/basic");
+  };
 
+  var callAuthServer = function(req, url){
+    $.ajax({
+          url : "https://localhost:8085/"+url,
+          type: "POST",
+          dataType:"json",
+          data : JSON.stringify(req),
+          contentType: "application/json",
+          success: function(data, textStatus, jqXHR)
+          {
+            console.log('the data is', data);
+          },
+          error: function (jqXHR, textStatus, errorThrown)
+          {
+            console.log('error');
+            console.log(errorThrown);
+            console.log(textStatus);
+          }
+      });
+  };
+
+</script>
+<script>
+function signInCallback(authResult) {
+  if (authResult['code']) {
+    console.log(authResult);
+ 
+    var req = {
+      code:authResult['code'],
+      task:'login',
+      clientId: '730221684703-rsvgrrkhnq3v1sbg0engf4od538p5lv4.apps.googleusercontent.com',
+      redirectUri: 'https://localhost:8080'
+    };
+    
+    // Hide the sign-in button now that the user is authorized, for example:
+    //$('#signinButton').attr('style', 'display: none');
+
+    // Send the code to the server
+    callAuthServer(req,"auth/google");
+  } else {
+    // There was an error.
+  }
+}
+</script>
 <!-- Latest compiled and minified CSS -->
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-social/4.10.1/bootstrap-social.css">
@@ -57,6 +80,7 @@ var loginMicrosoft = function(){
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 <!-- Latest compiled JavaScript -->
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://apis.google.com/js/platform.js" async defer></script>
 <style>.btn{width:200px;}</style>
 </head>
 <body>
@@ -64,16 +88,22 @@ var loginMicrosoft = function(){
 
  <div class="container">
 
+                <button id="signinButton">Sign in with Google</button>
+                <script>
+                  $('#signinButton').click(function() {
+                    // signInCallback defined in step 6.
+                    auth2.grantOfflineAccess({'redirect_uri': 'postmessage'}).then(signInCallback);
+                  });
+                </script>
+                <div id="result"></div>
                 <button onclick="loginMicrosoft();" class="btn btn-block btn-social btn-microsoft"><span class="fa fa-windows"></span> Microsoft</button>
                 <button onclick="loginGoogle();" class="btn btn-block btn-social btn-google"><span class="fa fa-google-plus"></span> Google</button>
-                <form name="loginform" onSubmit="return validateForm();" action="main.html" method="post">
-                    <label>User name</label>
-                    <input type="text" name="usr" placeholder="username"> 
-                    <label>Password</label>
-                    <input type="password" name="pword" placeholder="password">
-                    <input type="submit" value="Login"/>
-                </form>
-
+                <label>User name</label>
+                <input type="text" id="username" placeholder="username"> 
+                <label>Password</label>
+                <input type="password" id="password" name="pword" placeholder="password">
+                <button onclick="loginBasic();">Login</button>
+            
                 <script>
                     function validateForm() {
                         var un = document.loginform.usr.value;
@@ -90,6 +120,21 @@ var loginMicrosoft = function(){
                   }
                 </script>
     </div> <!-- /container -->
+<!-- Trigger the modal with a button -->
 
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true"> × </button>
+        <h3 id="myModalLabel">Modal header</h3>
+    </div>
+    <div class="modal-body">        
+        <p>Remote content would usually be slotted in here but can't be fetched due to cross-domain Access Control Origin settings (jsfiddle cannot access example.com via AJAX)</p>
+    </div>
+    <div class="modal-footer">
+        <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+    </div>
+</div>
 </body>
 </html>
